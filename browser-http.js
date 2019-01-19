@@ -43,7 +43,7 @@ function http(method, url, options, data) {
         chrome.webRequest.onBeforeSendHeaders.addListener(
             refererListener, //  function
             {urls: requestUrls}, // RequestFilter object
-            ["requestHeaders", "blocking", "extraHeaders"] //  extraInfoSpec
+            ["requestHeaders", "blocking"] //  extraInfoSpec
         );
     }
 

@@ -3,7 +3,7 @@
   "browser": {
     "http.js": "browser-http.js"
   },
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Utility package for voc-api",
   "main": "http.js",
   "author": "Thor Galle",

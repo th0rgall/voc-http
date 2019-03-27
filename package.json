@@ -1,11 +1,11 @@
 {
   "name": "voc-http",
   "browser": {
-    "http.js": "browser-http.js"
+    "http.js": "./browser-http.js"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Utility package for voc-api",
-  "main": "http.js",
+  "main": "./http.js",
   "author": "Thor Galle",
   "license": "MIT",
   "dependencies": {

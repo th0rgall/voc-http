@@ -12,6 +12,17 @@
  */
 function http(method, url, options, data) {
 
+    /**
+     * Detect Chrome version
+     * To check whether plugin needs to apply extraHeaders infospec to modify the referrer
+     * (reference: https://developer.chrome.com/extensions/webRequest#life_cycle_footnote)
+     * Function from https://stackoverflow.com/questions/4900436/how-to-detect-the-installed-chrome-version
+     */
+    function getChromeVersion() {     
+        var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+        return raw ? parseInt(raw[2], 10) : false;
+    }
+
     // TODO: this doesn't work as expected now
     // can I put firstRun in the outer scope?
     // or: make http an initializable object in vocabulary-api.js, and change http.js
@@ -43,7 +54,7 @@ function http(method, url, options, data) {
         chrome.webRequest.onBeforeSendHeaders.addListener(
             refererListener, //  function
             {urls: requestUrls}, // RequestFilter object
-            ["requestHeaders", "blocking"] //  extraInfoSpec
+            ["requestHeaders", "blocking"].concat(getChromeVersion() >= 72 ? ["extraHeaders"] : []) //  extraInfoSpec
         );
     }
 

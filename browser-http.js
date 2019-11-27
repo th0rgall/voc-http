@@ -1,3 +1,25 @@
+function Http() {
+    this.firstRun = true;
+}
+
+/**
+ * Detect Chrome version
+ * To check whether plugin needs to apply extraHeaders infospec to modify the referrer
+ * (reference: https://developer.chrome.com/extensions/webRequest#life_cycle_footnote)
+ * Function from https://stackoverflow.com/questions/4900436/how-to-detect-the-installed-chrome-version
+ */
+Http.prototype.getChromeVersion = function() {     
+    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+    return raw ? parseInt(raw[2], 10) : false;
+}
+
+Http.prototype.setCookie = function(cookie) {
+    // no-op
+    // TODO: should this also be set here? -> document.cookie = cookie;
+    // meant for web use
+};
+
+
 /**
  * 
  * @param {*} method 
@@ -10,23 +32,7 @@
  *                  } 
  * @param {*} data for POST or PUT 
  */
-function http(method, url, options, data) {
-
-    /**
-     * Detect Chrome version
-     * To check whether plugin needs to apply extraHeaders infospec to modify the referrer
-     * (reference: https://developer.chrome.com/extensions/webRequest#life_cycle_footnote)
-     * Function from https://stackoverflow.com/questions/4900436/how-to-detect-the-installed-chrome-version
-     */
-    function getChromeVersion() {     
-        var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-        return raw ? parseInt(raw[2], 10) : false;
-    }
-
-    // TODO: this doesn't work as expected now
-    // can I put firstRun in the outer scope?
-    // or: make http an initializable object in vocabulary-api.js, and change http.js
-    let firstRun = true;
+Http.prototype.http = function(method, url, options, data) {
 
     /**
      * Execute an function with a modified Referer header for browser requests
@@ -54,11 +60,11 @@ function http(method, url, options, data) {
         chrome.webRequest.onBeforeSendHeaders.addListener(
             refererListener, //  function
             {urls: requestUrls}, // RequestFilter object
-            ["requestHeaders", "blocking"].concat(getChromeVersion() >= 72 ? ["extraHeaders"] : []) //  extraInfoSpec
+            ["requestHeaders", "blocking"].concat(this.getChromeVersion() >= 72 ? ["extraHeaders"] : []) //  extraInfoSpec
         );
     }
 
-    if (firstRun) {
+    if (this.firstRun) {
         setReferrerInterceptor([
             `${this.URLBASE}/progress/*`,
             `${this.URLBASE}/lists/byprofile.json`, 
@@ -66,7 +72,7 @@ function http(method, url, options, data) {
             `${this.URLBASE}/lists/delete.json`,
             `${this.URLBASE}/lists/vocabgrabber/grab.json`,
             `${this.URLBASE}/lists/load.json`]);
-        firstRun = false;
+        this.firstRun = false;
     }
 
     return new Promise((resolve, reject) => {
@@ -103,4 +109,4 @@ function http(method, url, options, data) {
     });
 }
 
-module.exports = http;
+module.exports = Http;

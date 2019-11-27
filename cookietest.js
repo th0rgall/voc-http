@@ -1,0 +1,3 @@
+const Cookie = require('tough-cookie').Cookie;
+
+console.log(Cookie.parse("_asid=000zVae74; _gat=1; tz=Europe/Paris; _cmpQcif3pcsupported=1; googlepersonalization=OpXX3WOpXX3WgA; eupubconsent=BOpXX1wOpXX3WAKAaAENAAAAmAAAAA; _ga=GA1.2.2019335971.1572637836; _gid=GA1.2.1482033719.1572637836; AWSALB=xtKL8+GhMgFQW+T3yres3LA8le5NS059dyDl8w9ppJ/OUGd8tsT0/IsjY/opz+5DMUifHVFhAZSZ8x4nLyr7Bu23QRrVd49uv7fo+lXqzcyrlDi1gAivqQ29zwEW").toJSON());

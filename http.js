@@ -1,16 +1,40 @@
-
 const request = require('request-promise');
+const tough = require('tough-cookie');
+const setCookieString = (string, jar, uri) => string.split(';').forEach(single => jar.setCookie(single, uri));
 
-function http(method, url, options, data) {
+function Http() {
+    this.cookiejar = null;
+}
+
+Http.prototype.setCookie = function(cookie) {
+    if (cookie) {
+        if (this.cookiejar === null) this.cookiejar = request.jar();
+        // if (this.cookiejar === null) this.cookiejar = new tough.CookieJar();
+        // setCookieString(cookie, this.cookiejar, 'https://vocabulary.com/');
+        setCookieString(cookie, this.cookiejar, 'https://www.vocabulary.com/');
+    }
+};
+
+Http.prototype.getJar = function() {
+    return this.cookiejar;
+}
+
+Http.prototype.http = function(method, url, options, data) {
+    const self = this;
+    // console.log("cookie this ", this);
     return new Promise((resolve, reject) => {
         let requestOptions = {
-            url,
+            // url,
+            uri: url,
             method,
             followAllRedirects: true,
-            jar: true,
+            jar: self.cookiejar || true,
             resolveWithFullResponse: true,
             headers: {}
         }
+
+        // console.log("uri: ", requestOptions.uri);
+        // console.log("cookiejar: ", self.cookiejar);
 
         let sendReg = /PUT|POST/i;
         if (method.match(sendReg) && data) {
@@ -24,7 +48,7 @@ function http(method, url, options, data) {
             }
             // expect json response
             if ( options.responseType === 'json') requestOptions.json = true;
-            if ( options.credentials ) req.withCredentials = options.credentials;
+            // if ( options.credentials ) req.withCredentials = options.credentials;
         }
         
 
@@ -63,4 +87,4 @@ function http(method, url, options, data) {
     )
 }
 
-module.exports = http;
+module.exports = Http;

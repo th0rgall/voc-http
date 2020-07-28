@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx mocha"
   },
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Utility package for voc-api",
   "main": "./http.js",
   "author": "Thor Galle",

@@ -1,4 +1,4 @@
-const request = require("request-promise");
+const request = require("request-promise-native");
 const tough = require("tough-cookie");
 const setCookieString = (string, jar, uri) =>
   string.split(";").forEach((single) => jar.setCookie(single, uri));
